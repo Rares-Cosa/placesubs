@@ -1,26 +1,28 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Colors — PlaceSubs design system */
+  --color-background: #faf8f3;
+  --color-surface: #ffffff;
+  
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #7a7a7a;
+  
+  --color-accent: #1f1f1f;
+  
+  --color-category-entertainment: #efe0ec;
+  --color-category-productivity: #d9ebda;
+  --color-category-health: #f5efd4;
+  
+  --color-border: #efeae0;
+  --color-card-inset: #faf8f3;
+
+  /* Font family */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Base styles */
+html, body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
 }

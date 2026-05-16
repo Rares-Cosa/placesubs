@@ -1,0 +1,19 @@
+export type SubscriptionCategory = "entertainment" | "productivity" | "health";
+
+export type BillingCycle = "monthly" | "yearly";
+
+export interface Subscription {
+  id: string;
+  name: string;
+  /** A single character (letter) or emoji to show in the logo circle */
+  logo: string;
+  category: SubscriptionCategory;
+  price: number;
+  /** Currency code, e.g., "USD", "EUR", "RON" */
+  currency: string;
+  billingCycle: BillingCycle;
+  /** ISO date string of the next billing date */
+  nextBillingDate: string;
+  /** ISO date string of when the user started this subscription */
+  startDate: string;
+}
