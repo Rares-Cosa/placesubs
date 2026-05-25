@@ -1,8 +1,10 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import type { Subscription } from "@/types/subscription";
 import DashboardContent from "./components/DashboardContent";
 
 export default async function DashboardPage() {
+  const supabase = await createClient();
+
   // Fetch subscriptions from Supabase
   const { data, error } = await supabase
     .from("subscriptions")
@@ -25,14 +27,14 @@ export default async function DashboardPage() {
   }
 
   // Map database columns (snake_case) to our TypeScript interface (camelCase)
-  const subscriptions: Subscription[] = (data ?? []).map((row) => ({
+  const subscriptions: Subscription[] = (data ?? []).map((row: SubscriptionRow) => ({
     id: row.id,
     name: row.name,
     logo: row.logo,
-    category: row.category,
+    category: row.category as Subscription["category"],
     price: Number(row.price),
     currency: row.currency,
-    billingCycle: row.billing_cycle,
+    billingCycle: row.billing_cycle as Subscription["billingCycle"],
     nextBillingDate: row.next_billing_date,
     startDate: row.start_date,
   }));
@@ -42,7 +44,31 @@ export default async function DashboardPage() {
       <h1 className="text-5xl font-bold text-text-primary text-center">
         Optimize Your Subscriptions
       </h1>
-      <DashboardContent subscriptions={subscriptions} />
+      {subscriptions.length === 0 ? (
+        <div className="mt-12 text-center">
+          <p className="text-text-secondary text-lg">
+            No subscriptions yet.
+          </p>
+          <p className="text-text-secondary text-sm mt-2">
+            Sign in to start tracking your subscriptions.
+          </p>
+        </div>
+      ) : (
+        <DashboardContent subscriptions={subscriptions} />
+      )}
     </div>
   );
 }
+
+// Database row shape (snake_case, as stored in Supabase)
+type SubscriptionRow = {
+  id: string;
+  name: string;
+  logo: string;
+  category: string;
+  price: number | string;
+  currency: string;
+  billing_cycle: string;
+  next_billing_date: string;
+  start_date: string;
+};
