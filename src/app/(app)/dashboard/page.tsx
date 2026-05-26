@@ -1,11 +1,22 @@
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import type { Subscription } from "@/types/subscription";
 import DashboardContent from "./components/DashboardContent";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
 
-  // Fetch subscriptions from Supabase
+  // Check if user is authenticated
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    redirect("/login");
+  }
+
+  // Fetch subscriptions for the authenticated user
   const { data, error } = await supabase
     .from("subscriptions")
     .select("*")
@@ -50,7 +61,7 @@ export default async function DashboardPage() {
             No subscriptions yet.
           </p>
           <p className="text-text-secondary text-sm mt-2">
-            Sign in to start tracking your subscriptions.
+            Add your first subscription to start tracking.
           </p>
         </div>
       ) : (
