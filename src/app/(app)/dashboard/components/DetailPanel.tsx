@@ -6,17 +6,15 @@ import {
   capitalize,
   calculateTotalSpent,
 } from "@/lib/format";
-
-const categoryColors: Record<SubscriptionCategory, string> = {
-  entertainment: "bg-category-entertainment",
-  productivity: "bg-category-productivity",
-  health: "bg-category-health",
-};
+import { getLogoColor, getLogoInitial } from "@/lib/logo";
 
 const categoryLabels: Record<SubscriptionCategory, string> = {
-  entertainment: "Entertainment",
-  productivity: "Productivity",
-  health: "Health",
+  streaming: "Streaming",
+  software: "Software",
+  fitness: "Fitness",
+  news: "News",
+  gaming: "Gaming",
+  other: "Other",
 };
 
 interface DetailPanelProps {
@@ -24,16 +22,20 @@ interface DetailPanelProps {
 }
 
 export default function DetailPanel({ subscription }: DetailPanelProps) {
-  const logoColor = categoryColors[subscription.category];
+  const { bg, fg } = getLogoColor(subscription.name);
+  const initial = getLogoInitial(subscription.name);
   const categoryLabel = categoryLabels[subscription.category];
   const daysUntil = getDaysUntil(subscription.nextBillingDate);
   const formattedDate = formatDate(subscription.nextBillingDate);
-  const formattedPrice = formatCurrency(subscription.price, subscription.currency);
+  const formattedPrice = formatCurrency(
+    subscription.price,
+    subscription.currency,
+  );
   const billingLabel = capitalize(subscription.billingCycle);
   const { total, monthsCount } = calculateTotalSpent(
     subscription.price,
     subscription.billingCycle,
-    subscription.startDate
+    subscription.startDate,
   );
   const formattedTotal = formatCurrency(total, subscription.currency);
 
@@ -43,10 +45,11 @@ export default function DetailPanel({ subscription }: DetailPanelProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div
-            className={`flex h-13 w-13 items-center justify-center rounded-xl ${logoColor}`}
+            className="flex h-13 w-13 items-center justify-center rounded-xl"
+            style={{ backgroundColor: bg }}
           >
-            <span className="text-xl font-semibold text-text-primary">
-              {subscription.logo}
+            <span className="text-xl font-semibold" style={{ color: fg }}>
+              {initial}
             </span>
           </div>
           <div className="flex flex-col gap-1">
@@ -79,7 +82,7 @@ export default function DetailPanel({ subscription }: DetailPanelProps) {
           <p className="text-2xl font-bold text-text-primary">
             {formattedDate}
           </p>
-          <span className="rounded-full bg-category-entertainment px-3 py-1.5 text-[13px] font-medium text-text-primary">
+          <span className="rounded-full bg-card-inset px-3 py-1.5 text-[13px] font-medium text-text-secondary">
             {daysUntil}
           </span>
         </div>
@@ -93,7 +96,9 @@ export default function DetailPanel({ subscription }: DetailPanelProps) {
           <p className="text-xs font-medium uppercase tracking-wider text-text-secondary">
             Price
           </p>
-          <p className="text-2xl font-bold text-text-primary">{formattedPrice}</p>
+          <p className="text-2xl font-bold text-text-primary">
+            {formattedPrice}
+          </p>
         </div>
         <div className="flex flex-1 flex-col gap-2 rounded-2xl bg-card-inset p-5">
           <p className="text-xs font-medium uppercase tracking-wider text-text-secondary">
@@ -111,7 +116,9 @@ export default function DetailPanel({ subscription }: DetailPanelProps) {
           Total spent
         </p>
         <div className="flex items-baseline gap-2">
-          <p className="text-2xl font-bold text-text-primary">{formattedTotal}</p>
+          <p className="text-2xl font-bold text-text-primary">
+            {formattedTotal}
+          </p>
           <p className="text-[15px] font-medium text-text-secondary">
             over {monthsCount} months
           </p>
