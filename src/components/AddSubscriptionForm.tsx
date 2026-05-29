@@ -41,13 +41,14 @@ export function AddSubscriptionForm({ onSuccess }: Props) {
   }
 
   return (
-    <form action={handleSubmit} className="flex flex-col gap-4">
+    <form action={handleSubmit} autoComplete="off" className="flex flex-col gap-4">
       <Field label="Name" error={fieldErrors.name?.[0]}>
         <input
           name="name"
           type="text"
           required
           autoFocus
+          autoComplete="off"
           maxLength={60}
           placeholder="Netflix"
           className={inputClass(!!fieldErrors.name)}
