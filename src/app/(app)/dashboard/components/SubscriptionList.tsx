@@ -1,6 +1,6 @@
 import type { Subscription } from "@/types/subscription";
 import SubscriptionCard from "./SubscriptionCard";
-import AddSubscriptionButton from "./AddSubscriptionButton";
+import { AddSubscriptionButton } from "@/components/AddSubscriptionButton";
 
 interface SubscriptionListProps {
   subscriptions: Subscription[];
@@ -27,7 +27,10 @@ export default function SubscriptionList({
       </div>
 
       <div className="mt-auto pt-6">
-        <AddSubscriptionButton />
+        {/* w-full on the wrapper makes the button fill the column width */}
+        <div className="[&>button]:w-full">
+          <AddSubscriptionButton variant="primary" />
+        </div>
       </div>
     </div>
   );

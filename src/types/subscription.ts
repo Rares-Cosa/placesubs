@@ -1,12 +1,16 @@
-export type SubscriptionCategory = "entertainment" | "productivity" | "health";
+export type SubscriptionCategory =
+  | "streaming"
+  | "software"
+  | "fitness"
+  | "news"
+  | "gaming"
+  | "other";
 
 export type BillingCycle = "monthly" | "yearly";
 
 export interface Subscription {
   id: string;
   name: string;
-  /** A single character (letter) or emoji to show in the logo circle */
-  logo: string;
   category: SubscriptionCategory;
   price: number;
   /** Currency code, e.g., "USD", "EUR", "RON" */
