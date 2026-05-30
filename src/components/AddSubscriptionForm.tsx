@@ -168,7 +168,7 @@ function Field({
 
 function inputClass(hasError: boolean) {
   return cn(
-    "h-10 rounded-lg border bg-surface px-3 text-sm text-text-primary",
+    "h-10 rounded-lg border bg-surface px-3 text-base text-text-primary sm:text-sm",
     "placeholder:text-text-secondary",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20",
     hasError
@@ -179,7 +179,7 @@ function inputClass(hasError: boolean) {
 
 function selectClass(hasError: boolean) {
   return cn(
-    "h-10 rounded-lg border bg-surface px-3 text-sm text-text-primary",
+    "h-10 rounded-lg border bg-surface px-3 text-base text-text-primary sm:text-sm",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20",
     hasError
       ? "border-red-400 focus-visible:ring-red-200"

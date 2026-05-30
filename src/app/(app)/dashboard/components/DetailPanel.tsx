@@ -40,7 +40,7 @@ export default function DetailPanel({ subscription }: DetailPanelProps) {
   const formattedTotal = formatCurrency(total, subscription.currency);
 
   return (
-    <div className="flex flex-1 flex-col gap-8 rounded-3xl bg-surface p-10">
+    <div className="flex flex-1 flex-col gap-8 rounded-3xl bg-surface p-10 h-full">
       {/* Header — logo + name/category + edit button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">

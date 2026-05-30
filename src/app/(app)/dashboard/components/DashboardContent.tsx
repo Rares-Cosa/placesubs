@@ -11,12 +11,9 @@ interface DashboardContentProps {
 }
 
 export default function DashboardContent({ subscriptions }: DashboardContentProps) {
-  // Desktop: first subscription is selected by default (always visible in detail panel)
   const [desktopSelectedId, setDesktopSelectedId] = useState<string>(
     subscriptions[0].id,
   );
-
-  // Mobile: nothing is open by default — user taps to expand
   const [mobileSelectedId, setMobileSelectedId] = useState<string | null>(null);
 
   const selectedSubscription = subscriptions.find(
@@ -37,7 +34,7 @@ export default function DashboardContent({ subscriptions }: DashboardContentProp
       </div>
 
       {/* Desktop: master-detail */}
-      <div className="mt-12 hidden gap-6 lg:flex">
+      <div className="mt-12 hidden gap-6 lg:flex lg:items-start h-[500px]">
         <SubscriptionList
           subscriptions={subscriptions}
           selectedId={desktopSelectedId}

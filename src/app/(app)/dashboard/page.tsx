@@ -23,7 +23,7 @@ export default async function DashboardPage() {
   if (error) {
     console.error("Failed to fetch subscriptions:", error);
     return (
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
+      <div className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
         <h1 className="text-3xl font-bold text-text-primary text-center sm:text-4xl lg:text-5xl">
           Optimize Your Subscriptions
         </h1>
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
+    <div className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
       <h1 className="text-3xl font-bold text-text-primary text-center sm:text-4xl lg:text-5xl">
         Optimize Your Subscriptions
       </h1>

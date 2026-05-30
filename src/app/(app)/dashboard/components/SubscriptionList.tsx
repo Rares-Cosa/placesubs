@@ -14,8 +14,8 @@ export default function SubscriptionList({
   onSelect,
 }: SubscriptionListProps) {
   return (
-    <div className="flex w-95 flex-col">
-      <div className="flex flex-col gap-3">
+    <div className="flex w-95 flex-col h-full">
+      <div className="flex flex-1 min-h-0 flex-col gap-3 overflow-y-auto p-1 -mx-1">
         {subscriptions.map((subscription) => (
           <SubscriptionCard
             key={subscription.id}
@@ -26,11 +26,8 @@ export default function SubscriptionList({
         ))}
       </div>
 
-      <div className="mt-auto pt-6">
-        {/* w-full on the wrapper makes the button fill the column width */}
-        <div className="[&>button]:w-full">
-          <AddSubscriptionButton variant="primary" />
-        </div>
+      <div className="pt-6 [&>button]:w-full">
+        <AddSubscriptionButton variant="primary" />
       </div>
     </div>
   );
