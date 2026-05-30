@@ -22,6 +22,11 @@ export default function MobileSubscriptionList({
 
   return (
     <div className="flex flex-col gap-3">
+      {/* Add button at the top — easier to reach than scrolling all the way down */}
+      <div className="[&>button]:w-full">
+        <AddSubscriptionButton variant="primary" />
+      </div>
+
       {subscriptions.map((subscription) => {
         const isOpen = subscription.id === selectedId;
 
@@ -48,10 +53,6 @@ export default function MobileSubscriptionList({
           </div>
         );
       })}
-
-      <div className="pt-3 [&>button]:w-full">
-        <AddSubscriptionButton variant="primary" />
-      </div>
     </div>
   );
 }
