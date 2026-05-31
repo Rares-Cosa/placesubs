@@ -1,4 +1,8 @@
+"use client";
+
 import type { Subscription, SubscriptionCategory } from "@/types/subscription";
+import { DeleteSubscriptionButton } from "@/components/DeleteSubscriptionButton";
+import { EditSubscriptionButton } from "@/components/EditSubscriptionButton";
 import {
   getDaysUntil,
   formatDate,
@@ -19,9 +23,13 @@ const categoryLabels: Record<SubscriptionCategory, string> = {
 
 interface DetailPanelProps {
   subscription: Subscription;
+  onDeleted?: () => void;
 }
 
-export default function DetailPanel({ subscription }: DetailPanelProps) {
+export default function DetailPanel({
+  subscription,
+  onDeleted,
+}: DetailPanelProps) {
   const { bg, fg } = getLogoColor(subscription.name);
   const initial = getLogoInitial(subscription.name);
   const categoryLabel = categoryLabels[subscription.category];
@@ -62,13 +70,13 @@ export default function DetailPanel({ subscription }: DetailPanelProps) {
           </div>
         </div>
 
-        <button
-          type="button"
-          aria-label="Edit subscription"
-          className="text-xl hover:opacity-70 transition-opacity"
-        >
-          ✏️
-        </button>
+        <div className="flex items-center gap-3">
+          <EditSubscriptionButton subscription={subscription} />
+          <DeleteSubscriptionButton
+            subscriptionId={subscription.id}
+            onDeleted={onDeleted}
+          />
+        </div>
       </div>
 
       <div className="h-px bg-border" />

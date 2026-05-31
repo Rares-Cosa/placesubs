@@ -9,12 +9,14 @@ interface MobileSubscriptionListProps {
   subscriptions: Subscription[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
+  onDeleted?: () => void;
 }
 
 export default function MobileSubscriptionList({
   subscriptions,
   selectedId,
   onSelect,
+  onDeleted,
 }: MobileSubscriptionListProps) {
   function handleCardClick(id: string) {
     onSelect(id === selectedId ? null : id);
@@ -46,7 +48,7 @@ export default function MobileSubscriptionList({
             >
               <div className="overflow-hidden">
                 <div className="pt-3">
-                  <DetailPanel subscription={subscription} />
+                  <DetailPanel subscription={subscription} onDeleted={onDeleted} />
                 </div>
               </div>
             </div>

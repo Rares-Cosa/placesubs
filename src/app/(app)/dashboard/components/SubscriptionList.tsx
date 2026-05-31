@@ -4,7 +4,7 @@ import { AddSubscriptionButton } from "@/components/AddSubscriptionButton";
 
 interface SubscriptionListProps {
   subscriptions: Subscription[];
-  selectedId: string;
+  selectedId: string | null;
   onSelect: (id: string) => void;
 }
 

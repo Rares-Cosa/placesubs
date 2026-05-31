@@ -1,36 +1,72 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { createSubscription } from "@/app/(app)/dashboard/actions";
+import {
+  createSubscription,
+  updateSubscription,
+} from "@/app/(app)/dashboard/actions";
 import {
   BILLING_CYCLES,
   CATEGORIES,
   CURRENCIES,
 } from "@/lib/validation/subscription";
+import type { Subscription } from "@/types/subscription";
 import { cn } from "@/lib/cn";
 
 function todayISO() {
   return new Date().toISOString().split("T")[0];
 }
 
-type Props = {
-  onSuccess: () => void;
-};
+/**
+ * Discriminated union: when mode is "edit", `subscription` is required;
+ * when "create", it must be absent. TypeScript enforces this at call sites.
+ */
+type Props =
+  | { mode: "create"; onSuccess: () => void; subscription?: never }
+  | { mode: "edit"; onSuccess: () => void; subscription: Subscription };
 
-export function AddSubscriptionForm({ onSuccess }: Props) {
+export function SubscriptionForm(props: Props) {
   const [isPending, startTransition] = useTransition();
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+
+  // Pre-compute defaults for each field. In edit mode, populate from the
+  // existing subscription. In create mode, use sensible blanks/defaults.
+  // We use `defaultValue` (uncontrolled inputs) so the user can type freely
+  // without us tracking every keystroke in state.
+  const defaults =
+    props.mode === "edit"
+      ? {
+          name: props.subscription.name,
+          price: String(props.subscription.price),
+          currency: props.subscription.currency,
+          billingCycle: props.subscription.billingCycle,
+          category: props.subscription.category,
+          nextBillingDate: props.subscription.nextBillingDate,
+        }
+      : {
+          name: "",
+          price: "",
+          currency: "EUR",
+          billingCycle: "monthly",
+          category: "streaming",
+          nextBillingDate: todayISO(),
+        };
 
   function handleSubmit(formData: FormData) {
     setGeneralError(null);
     setFieldErrors({});
 
     startTransition(async () => {
-      const result = await createSubscription(formData);
+      // Branch on mode to call the right server action. Both return the
+      // same { ok, error?, fieldErrors? } shape so the handling is uniform.
+      const result =
+        props.mode === "edit"
+          ? await updateSubscription(props.subscription.id, formData)
+          : await createSubscription(formData);
 
       if (result.ok) {
-        onSuccess();
+        props.onSuccess();
       } else {
         setGeneralError(result.error);
         if (result.fieldErrors) {
@@ -40,8 +76,21 @@ export function AddSubscriptionForm({ onSuccess }: Props) {
     });
   }
 
+  const submitLabel =
+    props.mode === "edit"
+      ? isPending
+        ? "Saving..."
+        : "Save"
+      : isPending
+        ? "Adding..."
+        : "Add";
+
   return (
-    <form action={handleSubmit} autoComplete="off" className="flex flex-col gap-4">
+    <form
+      action={handleSubmit}
+      autoComplete="off"
+      className="flex flex-col gap-4"
+    >
       <Field label="Name" error={fieldErrors.name?.[0]}>
         <input
           name="name"
@@ -50,6 +99,7 @@ export function AddSubscriptionForm({ onSuccess }: Props) {
           autoFocus
           autoComplete="off"
           maxLength={60}
+          defaultValue={defaults.name}
           placeholder="Netflix"
           className={inputClass(!!fieldErrors.name)}
         />
@@ -63,6 +113,7 @@ export function AddSubscriptionForm({ onSuccess }: Props) {
             required
             min="0.01"
             step="0.01"
+            defaultValue={defaults.price}
             placeholder="9.99"
             className={inputClass(!!fieldErrors.price)}
           />
@@ -72,7 +123,7 @@ export function AddSubscriptionForm({ onSuccess }: Props) {
           <select
             name="currency"
             required
-            defaultValue="EUR"
+            defaultValue={defaults.currency}
             className={selectClass(!!fieldErrors.currency)}
           >
             {CURRENCIES.map((c) => (
@@ -89,7 +140,7 @@ export function AddSubscriptionForm({ onSuccess }: Props) {
           <select
             name="billingCycle"
             required
-            defaultValue="monthly"
+            defaultValue={defaults.billingCycle}
             className={selectClass(!!fieldErrors.billingCycle)}
           >
             {BILLING_CYCLES.map((c) => (
@@ -104,7 +155,7 @@ export function AddSubscriptionForm({ onSuccess }: Props) {
           <select
             name="category"
             required
-            defaultValue="streaming"
+            defaultValue={defaults.category}
             className={selectClass(!!fieldErrors.category)}
           >
             {CATEGORIES.map((c) => (
@@ -121,7 +172,7 @@ export function AddSubscriptionForm({ onSuccess }: Props) {
           name="nextBillingDate"
           type="date"
           required
-          defaultValue={todayISO()}
+          defaultValue={defaults.nextBillingDate}
           className={inputClass(!!fieldErrors.nextBillingDate)}
         />
       </Field>
@@ -142,7 +193,7 @@ export function AddSubscriptionForm({ onSuccess }: Props) {
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30",
         )}
       >
-        {isPending ? "Adding..." : "Add"}
+        {submitLabel}
       </button>
     </form>
   );
