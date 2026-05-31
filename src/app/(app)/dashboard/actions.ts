@@ -88,3 +88,60 @@ export async function createSubscription(
 
   return { ok: true };
 }
+
+/**
+ * Result shape returned to the client after a delete attempt.
+ */
+export type DeleteSubscriptionResult =
+  | { ok: true }
+  | { ok: false; error: string };
+
+/**
+ * Deletes a subscription owned by the currently authenticated user.
+ *
+ * Flow:
+ * 1. Confirm the user is authenticated
+ * 2. Delete the row. RLS ensures users can only delete their own subscriptions
+ *    (even if the client passes an ID they don't own, Supabase will return
+ *    zero rows affected — safe).
+ * 3. Revalidate the dashboard so the list re-renders without the deleted row.
+ *
+ * Errors are returned as { ok: false } rather than thrown — same pattern as
+ * createSubscription — so the dialog can show specific messages inline.
+ */
+export async function deleteSubscription(
+  subscriptionId: string,
+): Promise<DeleteSubscriptionResult> {
+  // Basic input sanity check — UUIDs are always 36 chars. Don't trust the client.
+  if (typeof subscriptionId !== "string" || subscriptionId.length !== 36) {
+    return { ok: false, error: "Invalid subscription ID" };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return { ok: false, error: "You must be signed in to delete subscriptions" };
+  }
+
+  // The .eq("user_id", user.id) is technically redundant because of RLS, but it's
+  // defense-in-depth: even if someone misconfigures the RLS policy, this query
+  // would still only delete the row owned by the authenticated user.
+  const { error: deleteError } = await supabase
+    .from("subscriptions")
+    .delete()
+    .eq("id", subscriptionId)
+    .eq("user_id", user.id);
+
+  if (deleteError) {
+    console.error("Failed to delete subscription:", deleteError);
+    return { ok: false, error: "Something went wrong. Please try again." };
+  }
+
+  revalidatePath("/dashboard");
+
+  return { ok: true };
+}
