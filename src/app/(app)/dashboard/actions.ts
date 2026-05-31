@@ -145,3 +145,96 @@ export async function deleteSubscription(
 
   return { ok: true };
 }
+
+/**
+ * Result shape returned to the client after an update attempt.
+ * Same shape as create: includes optional field-level errors so the form
+ * can highlight individual inputs.
+ */
+export type UpdateSubscriptionResult =
+  | { ok: true }
+  | { ok: false; error: string; fieldErrors?: Record<string, string[]> };
+
+/**
+ * Updates a subscription owned by the currently authenticated user.
+ *
+ * Flow:
+ * 1. Sanity-check the subscription ID
+ * 2. Extract + coerce form fields (same as create)
+ * 3. Validate against the same Zod schema as create — identical rules
+ * 4. Confirm the user is authenticated
+ * 5. UPDATE the row scoped by id AND user_id (defense-in-depth alongside RLS)
+ *    Note: we deliberately do NOT update `user_id` or `start_date` —
+ *    those are immutable for a subscription's lifetime.
+ * 6. Revalidate the dashboard so the change appears immediately
+ */
+export async function updateSubscription(
+  subscriptionId: string,
+  formData: FormData,
+): Promise<UpdateSubscriptionResult> {
+  // --- Step 1: sanity-check the ID ---
+  if (typeof subscriptionId !== "string" || subscriptionId.length !== 36) {
+    return { ok: false, error: "Invalid subscription ID" };
+  }
+
+  // --- Step 2 & 3: extract, coerce, validate ---
+  const raw = {
+    name: formData.get("name"),
+    price: Number(formData.get("price")),
+    currency: formData.get("currency"),
+    billingCycle: formData.get("billingCycle"),
+    category: formData.get("category"),
+    nextBillingDate: formData.get("nextBillingDate"),
+  };
+
+  const parsed = subscriptionInputSchema.safeParse(raw);
+  if (!parsed.success) {
+    const flattened = parsed.error.flatten();
+    return {
+      ok: false,
+      error: "Please fix the errors below",
+      fieldErrors: flattened.fieldErrors as Record<string, string[]>,
+    };
+  }
+
+  // --- Step 4: confirm auth ---
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return { ok: false, error: "You must be signed in to edit subscriptions" };
+  }
+
+  // --- Step 5: update ---
+  // Scope by both id and user_id. RLS already restricts to the user's own
+  // rows, but the explicit user_id check is belt-and-suspenders against any
+  // future RLS misconfiguration.
+  const { error: updateError } = await supabase
+    .from("subscriptions")
+    .update({
+      name: parsed.data.name,
+      category: parsed.data.category,
+      price: parsed.data.price,
+      currency: parsed.data.currency,
+      billing_cycle: parsed.data.billingCycle,
+      next_billing_date: parsed.data.nextBillingDate,
+    })
+    .eq("id", subscriptionId)
+    .eq("user_id", user.id);
+
+  if (updateError) {
+    console.error("Failed to update subscription:", updateError);
+    return {
+      ok: false,
+      error: "Something went wrong. Please try again.",
+    };
+  }
+
+  // --- Step 6: revalidate ---
+  revalidatePath("/dashboard");
+
+  return { ok: true };
+}

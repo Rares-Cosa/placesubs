@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/Dialog";
-import { AddSubscriptionForm } from "@/components/AddSubscriptionForm";
+import { SubscriptionForm } from "@/components/SubscriptionForm";
 import { cn } from "@/lib/cn";
 
 type Props = {
@@ -53,7 +53,7 @@ export function AddSubscriptionButton({ variant = "primary" }: Props) {
           </DialogDescription>
         </DialogHeader>
 
-        <AddSubscriptionForm onSuccess={() => setOpen(false)} />
+        <SubscriptionForm mode="create" onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

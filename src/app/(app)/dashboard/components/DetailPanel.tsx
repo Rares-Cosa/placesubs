@@ -2,6 +2,7 @@
 
 import type { Subscription, SubscriptionCategory } from "@/types/subscription";
 import { DeleteSubscriptionButton } from "@/components/DeleteSubscriptionButton";
+import { EditSubscriptionButton } from "@/components/EditSubscriptionButton";
 import {
   getDaysUntil,
   formatDate,
@@ -70,13 +71,7 @@ export default function DetailPanel({
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            aria-label="Edit subscription"
-            className="text-xl hover:opacity-70 transition-opacity"
-          >
-            ✏️
-          </button>
+          <EditSubscriptionButton subscription={subscription} />
           <DeleteSubscriptionButton
             subscriptionId={subscription.id}
             onDeleted={onDeleted}
