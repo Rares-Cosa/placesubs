@@ -9,6 +9,7 @@
   --color-text-secondary: #7a7a7a;
   
   --color-accent: #1f1f1f;
+  --color-highlight: #ffd60a; /* yellow behind "Cancel subs." — tune to taste */
   
   --color-category-entertainment: #efe0ec;
   --color-category-productivity: #d9ebda;
@@ -25,4 +26,19 @@
 html, body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-22px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float {
+    animation: none;
+  }
 }
