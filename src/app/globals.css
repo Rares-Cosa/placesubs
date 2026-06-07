@@ -20,6 +20,12 @@
 
   /* Font family */
   --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  --color-pricing-bg: #1a1a1a;
+  --color-pricing-card: #232323;
+  --color-pricing-text: #ededed;
+  --color-pricing-muted: #9a9a9a;
+  --color-pricing-border: #333333;
 }
 
 /* Base styles */

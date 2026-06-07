@@ -49,7 +49,7 @@ function BrandChip({
 }) {
   return (
     <div
-      className={`animate-float absolute hidden items-center gap-3 rounded-2xl bg-surface p-3 pr-12 shadow-lg md:flex ${className}`}
+      className={`animate-float absolute hidden items-center gap-3 rounded-2xl bg-surface p-3 pr-12 shadow-lg xl:flex ${className}`}
       style={{ animationDuration: duration, animationDelay: delay }}
     >
       <div className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold ${color}`}>
