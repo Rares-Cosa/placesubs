@@ -30,10 +30,10 @@ export default function Pricing() {
         </div>
 
         {/* Dark pricing block */}
-        <div className="mt-14 rounded-[2rem] bg-pricing-bg p-4 shadow-xl sm:p-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 sm:gap-6">
+        <div className="mt-14 rounded-[2rem] bg-pricing-bg p-6 shadow-xl sm:p-8">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
             {/* Free tier */}
-            <div className="relative rounded-3xl border border-pricing-border bg-pricing-card p-7">
+            <div className="relative rounded-3xl border border-pricing-border bg-pricing-card p-7 pt-12">
               <div className="absolute -top-4 left-7 flex h-10 w-10 items-center justify-center rounded-full bg-pricing-border text-pricing-text">
                 <Leaf className="h-5 w-5" strokeWidth={2} />
               </div>
@@ -68,7 +68,7 @@ export default function Pricing() {
             </div>
 
             {/* Pro tier */}
-            <div className="relative rounded-3xl border border-highlight bg-pricing-card p-7">
+            <div className="relative rounded-3xl border border-highlight bg-pricing-card p-7 pt-12">
               <div className="absolute -top-4 left-7 flex h-10 w-10 items-center justify-center rounded-full bg-highlight text-text-primary shadow-[0_0_20px_rgba(255,214,10,0.5)]">
                 <Zap className="h-5 w-5" strokeWidth={2.5} />
               </div>
