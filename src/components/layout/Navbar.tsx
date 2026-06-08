@@ -10,36 +10,24 @@ export default async function Navbar() {
 
   return (
     <nav className="flex items-center justify-between px-12 h-18">
-      {/* Logo */}
-      <Link href="/" className="text-xl font-semibold text-text-primary">
+      {/* Logo — goes to dashboard, not landing */}
+      <Link href="/dashboard" className="text-xl font-semibold text-text-primary">
         placesubs
       </Link>
 
-      {/* Right side — depends on auth state */}
+      {/* Middle — app navigation */}
+      <div className="hidden items-center gap-8 md:flex">
+        <Link href="/dashboard" className="text-[15px] font-medium text-text-secondary transition-colors hover:text-text-primary">
+          Dashboard
+        </Link>
+      </div>
+
+      {/* Right — user + logout */}
       <div className="flex items-center gap-6">
-        {user ? (
-          <>
-            <span className="text-[15px] font-medium text-text-primary">
-              {user.user_metadata.full_name ?? user.email}
-            </span>
-            <LogoutButton />
-          </>
-        ) : (
-          <>
-            <Link
-              href="/login"
-              className="text-[15px] font-medium text-text-primary"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white"
-            >
-              Register
-            </Link>
-          </>
-        )}
+        <span className="text-[15px] font-medium text-text-primary">
+          {user?.user_metadata.full_name ?? user?.email}
+        </span>
+        <LogoutButton />
       </div>
     </nav>
   );

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-background">
+    <section id="hero" className="relative overflow-hidden bg-background">
       <div className="mx-auto flex min-h-[calc(100vh-80px)] max-w-5xl flex-col items-center justify-center px-6 py-24 text-center">
         <h1 className="text-5xl font-black leading-[1.05] tracking-tight text-text-primary sm:text-6xl md:text-7xl">
           <span className="block">Track all. Save more.</span>

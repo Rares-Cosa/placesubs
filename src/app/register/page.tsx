@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useState } from "react";
+import LandingNavbar from "@/components/landing/LandingNavbar";
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,38 +31,41 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-text-primary">
-            Create your account
-          </h1>
-          <p className="mt-2 text-text-secondary">
-            Start tracking your subscriptions today
+    <div className="min-h-screen">
+      <LandingNavbar minimal />
+      <div className="flex min-h-[calc(100vh-72px)] items-center justify-center px-6">
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-10">
+            <h1 className="text-3xl font-bold text-text-primary">
+              Create your account
+            </h1>
+            <p className="mt-2 text-text-secondary">
+              Start tracking your subscriptions today
+            </p>
+          </div>
+
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-text-primary font-medium rounded-lg px-4 py-3 transition"
+          >
+            <GoogleIcon />
+            {isLoading ? "Redirecting..." : "Continue with Google"}
+          </button>
+
+          {error && (
+            <p className="mt-4 text-sm text-red-600 text-center">
+              {error}
+            </p>
+          )}
+
+          <p className="mt-8 text-center text-sm text-text-secondary">
+            Already have an account?{" "}
+            <Link href="/login" className="font-medium text-text-primary hover:underline">
+              Sign in
+            </Link>
           </p>
         </div>
-
-        <button
-          onClick={handleGoogleSignIn}
-          disabled={isLoading}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-text-primary font-medium rounded-lg px-4 py-3 transition"
-        >
-          <GoogleIcon />
-          {isLoading ? "Redirecting..." : "Continue with Google"}
-        </button>
-
-        {error && (
-          <p className="mt-4 text-sm text-red-600 text-center">
-            {error}
-          </p>
-        )}
-
-        <p className="mt-8 text-center text-sm text-text-secondary">
-          Already have an account?{" "}
-          <Link href="/login" className="font-medium text-text-primary hover:underline">
-            Sign in
-          </Link>
-        </p>
       </div>
     </div>
   );

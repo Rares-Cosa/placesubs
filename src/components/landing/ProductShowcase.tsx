@@ -35,7 +35,7 @@ const features = [
 
 export default function ProductShowcase() {
   return (
-    <section className="bg-surface px-6 pt-16 pb-24">
+    <section id="features" className="bg-surface px-6 pt-16 pb-24">
       {/* Heading + subtext — stays narrow */}
       <div className="mx-auto max-w-5xl text-center">
         <h2 className="text-3xl font-bold tracking-tight text-text-primary sm:text-4xl">
@@ -81,7 +81,7 @@ export default function ProductShowcase() {
                 <div
                   key={sub.id}
                   className={`flex items-center gap-4 rounded-2xl border bg-surface p-4 ${
-                    selected ? "border-text-primary order-last md:order-none" : "border-border"
+                    selected ? "border-text-primary order-last md:order-0" : "border-border"
                   }`}
                 >
                   <div
@@ -94,7 +94,7 @@ export default function ProductShowcase() {
               );
             })}
 
-            <div className="order-first flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-4 font-semibold text-surface md:order-none md:mt-auto">
+            <div className="order-first flex w-full items-center justify-center gap-2 rounded-2xl bg-accent px-4 py-4 font-semibold text-surface md:order-0 md:mt-auto">
               <span aria-hidden>+</span>
               Add Subscription
             </div>
