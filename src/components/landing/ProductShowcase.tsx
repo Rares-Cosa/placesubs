@@ -35,7 +35,7 @@ const features = [
 
 export default function ProductShowcase() {
   return (
-    <section id="features" className="bg-surface px-6 pt-16 pb-24">
+    <section id="features" className="bg-background px-6 pt-16 pb-24">
       {/* Heading + subtext — stays narrow */}
       <div className="mx-auto max-w-5xl text-center">
         <h2 className="text-3xl font-bold tracking-tight text-text-primary sm:text-4xl">
