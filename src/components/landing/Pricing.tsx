@@ -15,7 +15,7 @@ const proFeatures = [
 
 export default function Pricing() {
   return (
-    <section className="bg-background px-6 py-24">
+    <section id="pricing" className="bg-background px-6 py-24">
       <div className="mx-auto max-w-5xl">
         <div className="text-center">
           <span className="inline-block rounded-full bg-highlight/20 px-4 py-1 text-xs font-bold uppercase tracking-wider text-text-primary">
@@ -30,7 +30,7 @@ export default function Pricing() {
         </div>
 
         {/* Dark pricing block */}
-        <div className="mt-14 rounded-[2rem] bg-pricing-bg p-6 shadow-xl sm:p-8">
+        <div className="mt-14 rounded-4xl bg-pricing-bg p-6 shadow-xl sm:p-8">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
             {/* Free tier */}
             <div className="relative rounded-3xl border border-pricing-border bg-pricing-card p-7 pt-12">
