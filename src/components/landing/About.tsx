@@ -51,7 +51,7 @@ function makeBubbles(count: number) {
         background: `radial-gradient(circle at 34% 30%, ${p.hi} 0%, ${p.mid} 40%, ${p.end} 80%, ${p.end} 100%)`,
         boxShadow: "0 14px 26px -10px rgba(60,60,55,0.38)",
         animation: `psFloaty ${(5 + rnd() * 4).toFixed(2)}s ease-in-out ${(-rnd() * 4).toFixed(2)}s infinite`,
-        zIndex: Math.round(size),
+        zIndex: Math.min(Math.round(size / 4), 10),
       },
     });
   }
@@ -65,7 +65,7 @@ export default function About() {
   const bubblesMobile = useMemo(() => makeBubbles(18), []);
 
   return (
-    <section id="about" className="scroll-mt-20 bg-background px-6 py-24 md:px-16">
+    <section id="about" className="relative z-0 scroll-mt-20 bg-background px-6 py-24 md:px-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 md:grid-cols-2">
         {/* Left: copy */}
         <div className="max-w-xl">
