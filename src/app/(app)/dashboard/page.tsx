@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { Subscription } from "@/types/subscription";
 import DashboardContent from "./components/DashboardContent";
 import { AddSubscriptionButton } from "@/components/AddSubscriptionButton";
+import Total from "./components/Total";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -23,7 +24,7 @@ export default async function DashboardPage() {
   if (error) {
     console.error("Failed to fetch subscriptions:", error);
     return (
-      <div className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
+      <div className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-8 sm:py-6 lg:px-12">
         <h1 className="text-3xl font-bold text-text-primary text-center sm:text-4xl lg:text-5xl">
           Optimize Your Subscriptions
         </h1>
@@ -47,9 +48,17 @@ export default async function DashboardPage() {
     }),
   );
 
+  const monthlyTotal = subscriptions.reduce((sum, sub) => {
+    const perMonth =
+      sub.billingCycle === "yearly" ? sub.price / 12 : sub.price;
+    return sum + perMonth;
+  }, 0);
+
+  const yearlyTotal = monthlyTotal * 12;
+
   return (
-    <div className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
-      <h1 className="text-3xl font-bold text-text-primary text-center sm:text-4xl lg:text-5xl">
+    <div className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-8 sm:py-6 lg:px-12">
+      <h1 className="text-3xl font-bold text-text-primary text-center sm:text-4xl">
         Optimize Your Subscriptions
       </h1>
 
@@ -64,7 +73,10 @@ export default async function DashboardPage() {
           <AddSubscriptionButton variant="primary" />
         </div>
       ) : (
-        <DashboardContent subscriptions={subscriptions} />
+        <>
+          <DashboardContent subscriptions={subscriptions} />
+          <Total monthly={monthlyTotal} yearly={yearlyTotal} />
+        </>
       )}
     </div>
   );
