@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
+import NavLink from "../NavLink";
 
 export default async function Navbar() {
   const supabase = await createClient();
@@ -17,9 +18,8 @@ export default async function Navbar() {
 
       {/* Middle — app navigation */}
       <div className="hidden items-center gap-8 md:flex">
-        <Link href="/dashboard" className="text-[15px] font-medium text-text-secondary transition-colors hover:text-text-primary">
-          Dashboard
-        </Link>
+        <NavLink href="/dashboard">Dashboard</NavLink>
+        <NavLink href="/reminders">Reminders</NavLink>
       </div>
 
       {/* Right — user + logout */}

@@ -20,4 +20,7 @@ export interface Subscription {
   nextBillingDate: string;
   /** ISO date string of when the user started this subscription */
   startDate: string;
+  remindOneWeek: boolean;
+  remindThreeDays: boolean;
+  remindDayBefore: boolean;
 }
