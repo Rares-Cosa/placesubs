@@ -30,7 +30,7 @@ export async function sendReminder({
   });
 
   const { data, error } = await resend.emails.send({
-    from: "PlaceSubs <onboarding@resend.dev>",
+    from: "PlaceSubs <reminders@placesubs.com>",
     to,
     subject: `${subscriptionName} renews ${whenText}`,
     html: `
