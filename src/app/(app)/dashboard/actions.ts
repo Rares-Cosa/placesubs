@@ -238,3 +238,82 @@ export async function updateSubscription(
 
   return { ok: true };
 }
+
+/**
+ * Result shape returned to the client after a reminder toggle.
+ */
+export type UpdateReminderResult =
+  | { ok: true }
+  | { ok: false; error: string };
+
+/**
+ * The three reminder columns a user can toggle per subscription.
+ * Whitelisted so the client can never inject an arbitrary column name —
+ * the client sends a key ("oneWeek"), we map it to the real column here.
+ */
+const REMINDER_COLUMNS = {
+  oneWeek: "remind_one_week",
+  threeDays: "remind_three_days",
+  dayBefore: "remind_day_before",
+} as const;
+
+type ReminderKey = keyof typeof REMINDER_COLUMNS;
+
+/**
+ * Toggles a single reminder preference for a subscription owned by the
+ * authenticated user.
+ *
+ * Flow mirrors updateSubscription:
+ * 1. Sanity-check the subscription ID, the reminder key, and the value
+ * 2. Confirm the user is authenticated
+ * 3. UPDATE the single boolean column, scoped by id AND user_id
+ *    (defense-in-depth alongside RLS)
+ * 4. Revalidate the reminders page so the change persists on reload
+ */
+export async function updateReminder(
+  subscriptionId: string,
+  key: ReminderKey,
+  value: boolean,
+): Promise<UpdateReminderResult> {
+  // --- Step 1: sanity-check inputs ---
+  if (typeof subscriptionId !== "string" || subscriptionId.length !== 36) {
+    return { ok: false, error: "Invalid subscription ID" };
+  }
+
+  const column = REMINDER_COLUMNS[key];
+  if (!column) {
+    return { ok: false, error: "Invalid reminder type" };
+  }
+
+  if (typeof value !== "boolean") {
+    return { ok: false, error: "Invalid reminder value" };
+  }
+
+  // --- Step 2: confirm auth ---
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return { ok: false, error: "You must be signed in to update reminders" };
+  }
+
+  // --- Step 3: update the single column ---
+  const { error: updateError } = await supabase
+    .from("subscriptions")
+    .update({ [column]: value })
+    .eq("id", subscriptionId)
+    .eq("user_id", user.id);
+
+  if (updateError) {
+    console.error("Failed to update reminder:", updateError);
+    return { ok: false, error: "Something went wrong. Please try again." };
+  }
+
+  // --- Step 4: revalidate ---
+  revalidatePath("/reminders");
+
+  return { ok: true };
+}

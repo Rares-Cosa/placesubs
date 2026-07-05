@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NavLink from "../NavLink";
 
 export default function LandingNavbar({ minimal = false }: { minimal?: boolean }) {
   return (
@@ -12,16 +13,10 @@ export default function LandingNavbar({ minimal = false }: { minimal?: boolean }
         {!minimal && (
           <>
             {/* Middle — absolutely centered on the page */}
-            <div className="absolute left-[49%] hidden -translate-x-1/2 items-center gap-8 md:flex">
-              <Link href="/#features" className="text-[15px] font-medium text-text-secondary transition-colors hover:text-text-primary">
-                Features
-              </Link>
-              <Link href="/#pricing" className="text-[15px] font-medium text-text-secondary transition-colors hover:text-text-primary">
-                Pricing
-              </Link>
-              <Link href="/#about" className="text-[15px] font-medium text-text-secondary transition-colors hover:text-text-primary">
-                About
-              </Link>
+            <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex">
+              <NavLink href="/#features">Features</NavLink>
+              <NavLink href="/#pricing">Pricing</NavLink>
+              <NavLink href="/#about">About</NavLink>
             </div>
 
             {/* Right — auth entry points */}
