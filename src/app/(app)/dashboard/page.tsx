@@ -4,6 +4,9 @@ import type { Subscription } from "@/types/subscription";
 import DashboardContent from "./components/DashboardContent";
 import { AddSubscriptionButton } from "@/components/AddSubscriptionButton";
 import Total from "./components/Total";
+import UpgradeButton from "@/components/UpgradeButton";
+import ProGate from "@/components/ProGate";
+import { getIsPro } from "@/lib/auth/isPro";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -51,6 +54,8 @@ export default async function DashboardPage() {
     }),
   );
 
+  const isPro = await getIsPro();
+
   const monthlyTotal = subscriptions.reduce((sum, sub) => {
     const perMonth =
       sub.billingCycle === "yearly" ? sub.price / 12 : sub.price;
@@ -65,6 +70,18 @@ export default async function DashboardPage() {
         Optimize Your Subscriptions
       </h1>
 
+      {!isPro && (
+        <div className="mt-6 mb-6 flex items-center justify-between rounded-3xl border border-border bg-surface p-6">
+          <div>
+            <p className="font-bold text-text-primary">Unlock PlaceSubs Pro</p>
+            <p className="text-sm text-text-secondary">
+              Advanced insights and custom reminders, forever.
+            </p>
+          </div>
+          <UpgradeButton />
+        </div>
+      )}
+
       {subscriptions.length === 0 ? (
         <div className="mt-8 flex flex-col items-center gap-6 lg:mt-12">
           <div className="text-center">
@@ -78,7 +95,16 @@ export default async function DashboardPage() {
       ) : (
         <>
           <DashboardContent subscriptions={subscriptions} />
-          <Total monthly={monthlyTotal} yearly={yearlyTotal} />
+          {isPro ? (
+            <Total monthly={monthlyTotal} yearly={yearlyTotal} />
+          ) : (
+            <ProGate
+              title="See your total spend"
+              description="Upgrade to Pro to see your monthly and yearly totals."
+            >
+              <Total monthly={87} yearly={1044} />
+            </ProGate>
+          )}
         </>
       )}
     </div>

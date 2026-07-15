@@ -23,19 +23,31 @@ export async function GET(request: Request) {
 
   const supabase = createAdminClient();
 
-  // Cache user emails so we don't look up the same user twice.
-  const emailCache = new Map<string, string | null>();
-  const getEmail = async (userId: string) => {
-    if (emailCache.has(userId)) return emailCache.get(userId)!;
-    const { data } = await supabase.auth.admin.getUserById(userId);
-    const email = data.user?.email ?? null;
-    emailCache.set(userId, email);
-    return email;
+  // Cache user email + Pro status so we don't look up the same user twice.
+  const userCache = new Map<string, { email: string | null; isPro: boolean }>();
+
+  const getUserInfo = async (userId: string) => {
+    if (userCache.has(userId)) return userCache.get(userId)!;
+
+    const { data: authData } = await supabase.auth.admin.getUserById(userId);
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("is_pro")
+      .eq("id", userId)
+      .single();
+
+    const info = {
+      email: authData.user?.email ?? null,
+      isPro: profile?.is_pro ?? false,
+    };
+    userCache.set(userId, info);
+    return info;
   };
 
   const today = new Date();
   let sent = 0;
   let failed = 0;
+  let skippedNotPro = 0;
 
   // For each offset, find subscriptions renewing exactly that many days out
   // with the matching reminder toggle ON.
@@ -43,7 +55,6 @@ export async function GET(request: Request) {
     const target = new Date(today);
     target.setDate(target.getDate() + offset.days);
     const targetDate = toDateString(target);
-    
 
     const { data: subs, error } = await supabase
       .from("subscriptions")
@@ -57,7 +68,14 @@ export async function GET(request: Request) {
     }
 
     for (const sub of subs ?? []) {
-      const email = await getEmail(sub.user_id);
+      const { email, isPro } = await getUserInfo(sub.user_id);
+
+      // Reminders are a Pro feature — skip non-Pro users.
+      if (!isPro) {
+        skippedNotPro++;
+        continue;
+      }
+
       if (!email) {
         console.error(`No email for user ${sub.user_id}, skipping`);
         failed++;
@@ -78,5 +96,5 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, sent, failed });
+  return NextResponse.json({ ok: true, sent, failed, skippedNotPro });
 }
