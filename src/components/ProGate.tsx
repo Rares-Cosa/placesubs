@@ -11,7 +11,7 @@ export default function ProGate({
   description: string;
 }) {
   return (
-    <div className="relative mt-10">
+    <div className="relative mt-15">
       {/* Blurred, non-interactive preview */}
       <div className="pointer-events-none select-none blur-[6px]" aria-hidden>
         {children}

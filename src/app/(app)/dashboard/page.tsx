@@ -102,7 +102,7 @@ export default async function DashboardPage() {
               title="See your total spend"
               description="Upgrade to Pro to see your monthly and yearly totals."
             >
-              <Total monthly={87} yearly={1044} />
+              <Total monthly={0} yearly={0} />
             </ProGate>
           )}
         </>
