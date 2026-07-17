@@ -300,6 +300,18 @@ export async function updateReminder(
     return { ok: false, error: "You must be signed in to update reminders" };
   }
 
+  // --- Step 2.5: gate on Pro (reminders are a Pro feature) ---
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("is_pro")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile?.is_pro) {
+    return { ok: false, error: "Reminders are a Pro feature" };
+  }
+
+
   // --- Step 3: update the single column ---
   const { error: updateError } = await supabase
     .from("subscriptions")

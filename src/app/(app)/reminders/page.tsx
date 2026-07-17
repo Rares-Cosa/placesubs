@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import type { Subscription } from "@/types/subscription";
 import ReminderCard from "./components/ReminderCard";
+import ProGate from "@/components/ProGate";
+import { getIsPro } from "@/lib/auth/isPro";
 
 export default async function RemindersPage() {
   const supabase = await createClient();
@@ -49,6 +51,8 @@ export default async function RemindersPage() {
     }),
   );
 
+  const isPro = await getIsPro();
+
   return (
     <div className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-8 sm:py-6 lg:px-12">
       <div className="max-w-2xl">
@@ -65,11 +69,24 @@ export default async function RemindersPage() {
         <p className="mt-10 text-text-secondary">
           No subscriptions yet. Add one from the dashboard to set reminders.
         </p>
-      ) : (
+      ) : isPro ? (
         <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {subscriptions.map((sub) => (
             <ReminderCard key={sub.id} subscription={sub} />
           ))}
+        </div>
+      ) : (
+        <div className="mt-10">
+          <ProGate
+            title="Reminders are a Pro feature"
+            description="Upgrade to Pro to get emailed before your subscriptions renew."
+          >
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {subscriptions.map((sub) => (
+                <ReminderCard key={sub.id} subscription={sub} />
+              ))}
+            </div>
+          </ProGate>
         </div>
       )}
     </div>

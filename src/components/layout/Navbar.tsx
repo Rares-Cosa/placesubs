@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 import NavLink from "../NavLink";
+import Logo from "../Logo";
 
 export default async function Navbar() {
   const supabase = await createClient();
@@ -12,9 +12,7 @@ export default async function Navbar() {
   return (
     <nav className="flex items-center justify-between px-12 h-18">
       {/* Logo — goes to dashboard, not landing */}
-      <Link href="/dashboard" className="text-xl font-semibold text-text-primary">
-        placesubs
-      </Link>
+      <Logo />
 
       {/* Middle — app navigation */}
       <div className="hidden items-center gap-8 md:flex">

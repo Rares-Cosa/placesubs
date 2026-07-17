@@ -1,14 +1,13 @@
 import Link from "next/link";
 import NavLink from "../NavLink";
+import Logo from "../Logo";
 
 export default function LandingNavbar({ minimal = false }: { minimal?: boolean }) {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/75 backdrop-blur-xl">
       <nav className="relative flex items-center justify-between px-10 h-16">
         {/* Logo — back to landing top */}
-        <Link href="/" className="text-xl font-semibold text-text-primary">
-          placesubs
-        </Link>
+        <Logo />
 
         {!minimal && (
           <>
