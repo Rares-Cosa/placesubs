@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import LogoutButton from "./LogoutButton";
+import { getIsPro } from "@/lib/auth/isPro";
+import UserMenu from "./UserMenu";
 import NavLink from "../NavLink";
 import Logo from "../Logo";
 
@@ -8,11 +9,12 @@ export default async function Navbar() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const isPro = await getIsPro();
 
   return (
     <nav className="flex items-center justify-between px-12 h-18">
       {/* Logo — goes to dashboard, not landing */}
-      <Logo />
+      <Logo href="/dashboard" />
 
       {/* Middle — app navigation */}
       <div className="hidden items-center gap-8 md:flex">
@@ -20,13 +22,12 @@ export default async function Navbar() {
         <NavLink href="/reminders">Reminders</NavLink>
       </div>
 
-      {/* Right — user + logout */}
-      <div className="flex items-center gap-6">
-        <span className="text-[15px] font-medium text-text-primary">
-          {user?.user_metadata.full_name ?? user?.email}
-        </span>
-        <LogoutButton />
-      </div>
+      {/* Right — user menu */}
+      <UserMenu
+        name={user?.user_metadata.full_name ?? user?.email ?? ""}
+        email={user?.email ?? ""}
+        isPro={isPro}
+      />
     </nav>
   );
 }
