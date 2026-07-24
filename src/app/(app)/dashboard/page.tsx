@@ -4,7 +4,6 @@ import type { Subscription } from "@/types/subscription";
 import DashboardContent from "./components/DashboardContent";
 import { AddSubscriptionButton } from "@/components/AddSubscriptionButton";
 import Total from "./components/Total";
-import UpgradeButton from "@/components/UpgradeButton";
 import ProGate from "@/components/ProGate";
 import { getIsPro } from "@/lib/auth/isPro";
 
@@ -69,18 +68,6 @@ export default async function DashboardPage() {
       <h1 className="text-3xl font-bold text-text-primary text-center sm:text-4xl">
         Optimize Your Subscriptions
       </h1>
-
-      {!isPro && (
-        <div className="mt-6 mb-6 flex items-center justify-between rounded-3xl border border-border bg-surface p-6">
-          <div>
-            <p className="font-bold text-text-primary">Unlock PlaceSubs Pro</p>
-            <p className="text-sm text-text-secondary">
-              Advanced insights and custom reminders, forever.
-            </p>
-          </div>
-          <UpgradeButton />
-        </div>
-      )}
 
       {subscriptions.length === 0 ? (
         <div className="mt-8 flex flex-col items-center gap-6 lg:mt-12">

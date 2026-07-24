@@ -20,7 +20,7 @@ export default function UpgradeButton() {
     <button
       onClick={handleUpgrade}
       disabled={isLoading}
-      className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-surface transition-opacity disabled:opacity-60"
+      className="rounded-full cursor-pointer bg-accent px-6 py-3 text-sm font-semibold text-surface transition-opacity disabled:opacity-60"
     >
       {isLoading ? "Redirecting…" : "Upgrade to Pro — €5"}
     </button>

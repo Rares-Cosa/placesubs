@@ -31,7 +31,7 @@ export function AddSubscriptionButton({ variant = "primary" }: Props) {
         <button
           type="button"
           className={cn(
-            "inline-flex items-center justify-center gap-2 font-medium",
+            "cursor-pointer inline-flex items-center justify-center gap-2 font-medium",
             "transition-opacity hover:opacity-90",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30",
             variant === "primary" &&
