@@ -1,4 +1,5 @@
 import Navbar from "@/components/layout/Navbar";
+import MobileNav from "@/components/layout/MobileNav";
 
 export default function AppLayout({
   children,
@@ -8,7 +9,10 @@ export default function AppLayout({
   return (
     <div className="min-h-screen bg-background scroll-smooth">
       <Navbar />
-      {children}
+
+      <main className="pb-32 md:pb-0">{children}</main>
+
+      <MobileNav />
     </div>
   );
 }

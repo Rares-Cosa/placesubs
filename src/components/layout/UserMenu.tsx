@@ -79,8 +79,8 @@ export default function UserMenu({
                 <span
                   className={`inline-flex items-center gap-[3px] rounded-full px-2 py-[3px] text-[10px] font-bold tracking-[0.06em] ${
                     isPro
-                        ? "bg-highlight text-text-primary"
-                        : "bg-card-inset text-text-secondary"
+                      ? "bg-highlight text-text-primary"
+                      : "bg-card-inset text-text-secondary"
                   }`}
                 >
                   {isPro && <Zap size={10} fill="currentColor" strokeWidth={0} />}
@@ -99,6 +99,7 @@ export default function UserMenu({
             <Link
               href="/account"
               role="menuitem"
+              onClick={() => setOpen(false)}
               className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-text-primary hover:bg-card-inset"
             >
               <Settings size={16} /> Account
