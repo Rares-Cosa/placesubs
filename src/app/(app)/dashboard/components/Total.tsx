@@ -36,7 +36,7 @@ export default function Total({ monthly, yearly, currency = "€" }: TotalProps)
 
         {/* Yearly */}
         <div className="flex flex-col justify-center rounded-2xl bg-pricing-bg px-7 py-4">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-pricing-muted">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-highlight">
             Yearly
           </p>
           <div className="flex items-baseline gap-1.5">

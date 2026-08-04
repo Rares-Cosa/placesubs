@@ -31,7 +31,7 @@ export default function MobileSubscriptionList({
 
       {subscriptions.map((subscription) => {
         const isOpen = subscription.id === selectedId;
-
+        const isOverdue = new Date(subscription.nextBillingDate) < new Date();
         return (
           <div key={subscription.id} className="flex flex-col">
             <SubscriptionCard
@@ -39,6 +39,8 @@ export default function MobileSubscriptionList({
               isSelected={isOpen}
               onClick={() => handleCardClick(subscription.id)}
               showSummary
+              showChevron
+              isOverdue={isOverdue}
             />
 
             <div

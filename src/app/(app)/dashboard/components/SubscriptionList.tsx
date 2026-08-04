@@ -16,14 +16,20 @@ export default function SubscriptionList({
   return (
     <div className="flex w-95 flex-col h-full">
       <div className="flex flex-1 min-h-0 flex-col gap-3 overflow-y-auto p-1 -mx-1">
-        {subscriptions.map((subscription) => (
-          <SubscriptionCard
-            key={subscription.id}
-            subscription={subscription}
-            isSelected={subscription.id === selectedId}
-            onClick={() => onSelect(subscription.id)}
-          />
-        ))}
+        {subscriptions.map((subscription) => {
+          const isOverdue =
+            new Date(subscription.nextBillingDate) < new Date();
+          return (
+            <SubscriptionCard
+              key={subscription.id}
+              subscription={subscription}
+              isSelected={subscription.id === selectedId}
+              onClick={() => onSelect(subscription.id)}
+              showSummary
+              isOverdue={isOverdue}
+            />
+          );
+        })}
       </div>
 
       <div className="pt-6 [&>button]:w-full">

@@ -15,16 +15,10 @@ import type { Subscription } from "@/types/subscription";
 import { cn } from "@/lib/cn";
 
 type Props = {
-  /**
-   * The full subscription being edited. We need the whole object (not just
-   * the ID) so the form can pre-populate every field with current values.
-   */
   subscription: Subscription;
 };
 
 export function EditSubscriptionButton({ subscription }: Props) {
-  // Controlled state so we can close the dialog programmatically after a
-  // successful save (the form calls onSuccess, we flip open to false).
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,11 +28,13 @@ export function EditSubscriptionButton({ subscription }: Props) {
           type="button"
           aria-label="Edit subscription"
           className={cn(
-            "transition-opacity hover:opacity-70",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 rounded-md",
+            "flex h-10 w-10 items-center justify-center rounded-xl bg-card-inset",
+            "cursor-pointer text-text-secondary transition-colors",
+            "hover:bg-border hover:text-text-primary",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30",
           )}
         >
-          <Pencil className="h-5 w-5 text-text-secondary" strokeWidth={2} />
+          <Pencil className="h-[18px] w-[18px]" strokeWidth={2} />
         </button>
       </DialogTrigger>
 
