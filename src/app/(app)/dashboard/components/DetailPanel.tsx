@@ -11,6 +11,7 @@ import {
   calculateTotalSpent,
 } from "@/lib/format";
 import { getLogoColor, getLogoInitial } from "@/lib/logo";
+import { cn } from "@/lib/cn";
 
 const categoryLabels: Record<SubscriptionCategory, string> = {
   streaming: "Streaming",
@@ -46,14 +47,15 @@ export default function DetailPanel({
     subscription.startDate,
   );
   const formattedTotal = formatCurrency(total, subscription.currency);
+  const isOverdue = new Date(subscription.nextBillingDate) < new Date();
 
   return (
-    <div className="flex flex-1 flex-col gap-8 rounded-3xl bg-surface p-10 h-full">
+    <div className="flex flex-1 flex-col gap-8 rounded-3xl border border-border bg-surface p-10 h-full">
       {/* Header — logo + name/category + edit button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div
-            className="flex h-13 w-13 items-center justify-center rounded-xl"
+            className="flex h-13 w-13 shrink-0 items-center justify-center rounded-xl"
             style={{ backgroundColor: bg }}
           >
             <span className="text-xl font-semibold" style={{ color: fg }}>
@@ -90,7 +92,14 @@ export default function DetailPanel({
           <p className="text-2xl font-bold text-text-primary">
             {formattedDate}
           </p>
-          <span className="rounded-full bg-card-inset px-3 py-1.5 text-[13px] font-medium text-text-secondary">
+          <span
+            className={cn(
+              "rounded-full px-3 py-1.5 text-[13px] font-medium",
+              isOverdue
+                ? "bg-red-50 text-red-600"
+                : "bg-card-inset text-text-secondary",
+            )}
+          >
             {daysUntil}
           </span>
         </div>

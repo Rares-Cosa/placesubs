@@ -14,15 +14,7 @@ import { deleteSubscription } from "@/app/(app)/dashboard/actions";
 import { cn } from "@/lib/cn";
 
 type Props = {
-  /**
-   * The ID of the subscription to delete (Supabase UUID).
-   */
   subscriptionId: string;
-  /**
-   * Optional callback fired after a successful delete.
-   * The parent uses this to update its UI state (e.g., select the next
-   * subscription in the list, or show the empty state).
-   */
   onDeleted?: () => void;
 };
 
@@ -30,23 +22,14 @@ export function DeleteSubscriptionButton({
   subscriptionId,
   onDeleted,
 }: Props) {
-  // Dialog open/close state. Controlled (rather than letting Radix manage it)
-  // so we can programmatically close it from inside the delete handler.
   const [open, setOpen] = useState(false);
-
-  // useTransition gives us isPending without manual state management.
-  // While in flight: disable buttons, show "Deleting..." text.
   const [isPending, startTransition] = useTransition();
-
-  // High-level error to show inside the dialog (e.g., network failure).
   const [error, setError] = useState<string | null>(null);
 
   function handleDelete() {
     setError(null);
-
     startTransition(async () => {
       const result = await deleteSubscription(subscriptionId);
-
       if (result.ok) {
         setOpen(false);
         onDeleted?.();
@@ -60,8 +43,6 @@ export function DeleteSubscriptionButton({
     <Dialog
       open={open}
       onOpenChange={(next) => {
-        // Reset error state every time the dialog opens or closes,
-        // otherwise a previous error would linger if the user reopens it.
         setOpen(next);
         if (!next) setError(null);
       }}
@@ -71,11 +52,13 @@ export function DeleteSubscriptionButton({
           type="button"
           aria-label="Delete subscription"
           className={cn(
-            "text-xl transition-opacity hover:opacity-70",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 rounded-md",
+            "flex h-10 w-10 items-center justify-center rounded-xl bg-card-inset",
+            "cursor-pointer text-text-secondary transition-colors",
+            "hover:bg-red-50 hover:text-red-600",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30",
           )}
         >
-          <Trash2 className="h-5 w-5 text-text-secondary" strokeWidth={2} />
+          <Trash2 className="h-[18px] w-[18px]" strokeWidth={2} />
         </button>
       </DialogTrigger>
 
@@ -100,7 +83,7 @@ export function DeleteSubscriptionButton({
             disabled={isPending}
             onClick={() => setOpen(false)}
             className={cn(
-              "flex-1 rounded-xl border border-border bg-surface px-4 py-2.5",
+              "flex-1 cursor-pointer rounded-xl border border-border bg-surface px-4 py-2.5",
               "text-sm font-medium text-text-primary",
               "transition-colors hover:bg-card-inset",
               "disabled:cursor-not-allowed disabled:opacity-50",
@@ -115,11 +98,11 @@ export function DeleteSubscriptionButton({
             disabled={isPending}
             onClick={handleDelete}
             className={cn(
-                "flex-1 rounded-xl bg-red-400 px-4 py-2.5",
-                "text-sm font-medium text-white",
-                "transition-colors hover:bg-red-500",
-                "disabled:cursor-not-allowed disabled:opacity-50",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300",
+              "flex-1 cursor-pointer rounded-xl bg-red-400 px-4 py-2.5",
+              "text-sm font-medium text-white",
+              "transition-colors hover:bg-red-500",
+              "disabled:cursor-not-allowed disabled:opacity-50",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300",
             )}
           >
             {isPending ? "Deleting..." : "Delete"}

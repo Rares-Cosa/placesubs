@@ -10,13 +10,11 @@ interface SubscriptionCardProps {
   subscription: Subscription;
   isSelected: boolean;
   onClick: () => void;
-  /**
-   * When true, renders the price summary line and chevron — used on mobile/tablet
-   * where cards are the only surface for subscription info.
-   * When false, card is minimal (logo + name only) — used on desktop where
-   * the detail panel shows everything.
-   */
   showSummary?: boolean;
+  /** Show the accordion chevron (mobile only). */
+  showChevron?: boolean;
+  /** Show a red "overdue" dot in the top-right. */
+  isOverdue?: boolean;
 }
 
 export default function SubscriptionCard({
@@ -24,6 +22,8 @@ export default function SubscriptionCard({
   isSelected,
   onClick,
   showSummary = false,
+  showChevron = false,
+  isOverdue = false,
 }: SubscriptionCardProps) {
   const { bg, fg } = getLogoColor(subscription.name);
   const initial = getLogoInitial(subscription.name);
@@ -33,9 +33,11 @@ export default function SubscriptionCard({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full items-center gap-4 rounded-2xl bg-surface px-4 py-3 text-left",
-        "transition-all hover:opacity-90",
-        isSelected && "ring-2 ring-accent",
+        "relative flex w-full items-center gap-4 rounded-2xl px-4 py-3 text-left",
+        "cursor-pointer transition-colors",
+        isSelected
+          ? "bg-surface border border-border shadow-sm"
+          : "bg-transparent border border-transparent hover:bg-surface/60",
       )}
     >
       {/* Avatar */}
@@ -62,14 +64,21 @@ export default function SubscriptionCard({
         )}
       </div>
 
-      {/* Chevron — only when summary is shown (mobile) */}
-      {showSummary && (
-        <ChevronDown
-          className={cn(
-            "h-5 w-5 shrink-0 text-text-secondary transition-transform duration-300",
-            isSelected && "rotate-180",
+      {/* Trailing indicators — overdue dot + chevron, grouped */}
+      {(isOverdue || showChevron) && (
+        <div className="flex shrink-0 items-center gap-2">
+          {isOverdue && (
+            <span className="h-2 w-2 rounded-full bg-red-500" />
           )}
-        />
+          {showChevron && (
+            <ChevronDown
+              className={cn(
+                "h-5 w-5 text-text-secondary transition-transform duration-300",
+                isSelected && "rotate-180",
+              )}
+            />
+          )}
+        </div>
       )}
     </button>
   );
